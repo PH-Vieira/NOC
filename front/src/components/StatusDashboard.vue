@@ -8,8 +8,11 @@ const POLL_INTERVAL_MS = 12_000; // 12 segundos (entre 10 e 15)
 const MAX_HISTORY = 10;
 
 /** Em produção (Vercel), use VITE_API_URL apontando para o back (Railway). Em dev, proxy usa /api. */
-const API_BASE = import.meta.env.VITE_API_URL ?? '';
-const API_STATUS_URL = `${API_BASE}/api/status`;
+const rawApiBase = (import.meta.env.VITE_API_URL ?? '').trim();
+const API_BASE = rawApiBase && !/^https?:\/\//i.test(rawApiBase)
+  ? `https://${rawApiBase}`
+  : rawApiBase;
+const API_STATUS_URL = API_BASE ? `${API_BASE.replace(/\/$/, '')}/api/status` : '/api/status';
 
 const data = ref<StatusResponse | null>(null);
 const loading = ref(true);
