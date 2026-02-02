@@ -36,8 +36,18 @@ async function fetchStatus() {
   try {
     error.value = null;
     const res = await fetch(API_STATUS_URL);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json: StatusResponse = await res.json();
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
+    }
+    let json: StatusResponse;
+    try {
+      json = await res.json();
+    } catch {
+      throw new Error('Resposta inválida (não é JSON). Verifique CORS e FRONT_ORIGIN no back.');
+    }
+    if (!json?.services || !Array.isArray(json.services)) {
+      throw new Error('Resposta sem lista de serviços.');
+    }
     data.value = json;
     pushHistory(json);
   } catch (e) {
