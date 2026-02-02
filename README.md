@@ -63,9 +63,9 @@ Resposta exemplo:
 ## Deploy: front na Vercel, back no Railway
 
 - **Back (Railway)**  
-  - Suba a pasta `back/` como app Node.js.  
-  - Comando de start: `npm run build && npm start` (ou só `npm start` se o build for feito no deploy).  
-  - Crie a variável **FRONT_ORIGIN** com a URL do front na Vercel (ex.: `https://seu-projeto.vercel.app`). Para vários domínios, use vírgula: `https://app.vercel.app,https://outro.vercel.app`.
+  - O **Dockerfile na raiz** do repo monta e roda o backend a partir de `back/`. No Railway, **não defina Root Directory** (deixe vazio) para o deploy usar a raiz e esse Dockerfile.  
+  - A imagem usa Node 22, faz `npm ci`, `npm run build` e inicia com `node dist/index.js`. A porta é a variável `PORT` que o Railway define.  
+  - Crie a variável **FRONT_ORIGIN** com a URL do front na Vercel (ex.: `https://seu-projeto.vercel.app`). Para vários domínios, use vírgula.
 
 - **Front (Vercel)**  
   - Suba a pasta `front/` (ou o monorepo com root em `front/`).  
